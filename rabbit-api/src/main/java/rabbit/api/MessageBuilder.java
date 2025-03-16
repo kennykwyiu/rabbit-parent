@@ -1,7 +1,10 @@
 package rabbit.api;
 
+import rabbit.api.exception.MessageRunTimeException;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class MessageBuilder {
     private String messageId;
@@ -53,7 +56,16 @@ public class MessageBuilder {
         return this;
     }
 
-    public Message build() {
+    public Message build() throws MessageRunTimeException {
+
+        if (messageId == null) {
+            messageId = UUID.randomUUID().toString();
+        }
+
+        if (topic == null) {
+            throw new MessageRunTimeException("this topic is null");
+        }
+
         Message message = new Message(messageId, topic, routingKey, attributes, delayMills, messageType);
         return message;
     }
