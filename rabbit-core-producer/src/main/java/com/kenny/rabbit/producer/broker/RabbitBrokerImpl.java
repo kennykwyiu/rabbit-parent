@@ -21,13 +21,15 @@ public class RabbitBrokerImpl implements RabbitBroker {
     }
 
     private void sendKernel(Message message) {
-        CorrelationData correlationData = new CorrelationData(String.format("%s#%s",
-                                                        message.getMessageId(),
-                                                        System.currentTimeMillis()));
-        String topic = message.getTopic();
-        String routingKey = rabbitTemplate.getRoutingKey();
-        rabbitTemplate.convertAndSend(topic, routingKey, message, correlationData);
-        log.info("#RabbitBrokerImpl.sendKernel# send to rabbitmq, messageId: {}", message.getMessageId());
+        AsyncBaseQueue.submit((Runnable) () -> {
+            CorrelationData correlationData = new CorrelationData(String.format("%s#%s",
+                    message.getMessageId(),
+                    System.currentTimeMillis()));
+            String topic = message.getTopic();
+            String routingKey = rabbitTemplate.getRoutingKey();
+            rabbitTemplate.convertAndSend(topic, routingKey, message, correlationData);
+            log.info("#RabbitBrokerImpl.sendKernel# send to rabbitmq, messageId: {}", message.getMessageId());
+        });
     }
 
     @Override
