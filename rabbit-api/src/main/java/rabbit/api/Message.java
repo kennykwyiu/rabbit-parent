@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Message implements Serializable {
     private static final long serialVersionUID = 841277940410721237L;
 
@@ -30,7 +28,27 @@ public class Message implements Serializable {
     private int delayMills;
 
     /*  Message type: Default is confirm message type  */
-    @Builder.Default
     private MessageType messageType = MessageType.CONFIRM;
+
+    public Message() {
+    }
+
+    public Message(String messageId, String topic, String routingKey, Map<String, Object> attributes, int delayMills) {
+        this.messageId = messageId;
+        this.topic = topic;
+        this.routingKey = routingKey;
+        this.attributes = attributes;
+        this.delayMills = delayMills;
+    }
+
+    public Message(String messageId, String topic, String routingKey, Map<String, Object> attributes, int delayMills,
+                   MessageType messageType) {
+        this.messageId = messageId;
+        this.topic = topic;
+        this.routingKey = routingKey;
+        this.attributes = attributes;
+        this.delayMills = delayMills;
+        this.messageType = messageType;
+    }
 
 }
