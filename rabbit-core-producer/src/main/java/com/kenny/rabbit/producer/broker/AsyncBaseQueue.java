@@ -29,4 +29,8 @@ public class AsyncBaseQueue {
                             log.error("async sender is error rejected, runnable: {}, executor: {}", r, executor);
                         }
                     });
+
+    public static void submit(Runnable runnable) {
+        senderAsync.submit(runnable);
+    }
 }
