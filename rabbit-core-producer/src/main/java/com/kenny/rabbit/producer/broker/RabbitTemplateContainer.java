@@ -12,7 +12,7 @@ import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Component;
 import rabbit.api.Message;
 import rabbit.api.MessageType;
-import rabbit.api.exception.MessageException;
+import rabbit.api.exception.MessageRunTimeException;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +28,7 @@ public class RabbitTemplateContainer implements RabbitTemplate.ConfirmCallback {
     @Autowired
     private ConnectionFactory connectionFactory;
 
-    public RabbitTemplate getTemplate(Message message) throws MessageException {
+    public RabbitTemplate getTemplate(Message message) throws MessageRunTimeException {
         Preconditions.checkNotNull(message);
         String topic = message.getTopic();
         RabbitTemplate rabbitTemplate = rabbitMap.get(topic);

@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rabbit.api.Message;
 import rabbit.api.MessageType;
+import rabbit.api.exception.MessageRunTimeException;
+
 @Slf4j
 @Component
 public class RabbitBrokerImpl implements RabbitBroker {
 
     @Autowired
-    private RabbitTemplate rabbitTemplate;
+    private RabbitTemplateContainer rabbitTemplateContainer;
 
     @Override
     public void rapidSend(Message message) {
@@ -20,12 +22,15 @@ public class RabbitBrokerImpl implements RabbitBroker {
         sendKernel(message);
     }
 
-    private void sendKernel(Message message) {
+    private void sendKernel(Message message) throws MessageRunTimeException {
         AsyncBaseQueue.submit((Runnable) () -> {
             CorrelationData correlationData = new CorrelationData(String.format("%s#%s",
                     message.getMessageId(),
                     System.currentTimeMillis()));
             String topic = message.getTopic();
+
+            RabbitTemplate rabbitTemplate = rabbitTemplateContainer.getTemplate(message);
+
             String routingKey = rabbitTemplate.getRoutingKey();
             rabbitTemplate.convertAndSend(topic, routingKey, message, correlationData);
             log.info("#RabbitBrokerImpl.sendKernel# send to rabbitmq, messageId: {}", message.getMessageId());
