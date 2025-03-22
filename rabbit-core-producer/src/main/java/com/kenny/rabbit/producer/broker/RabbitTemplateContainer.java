@@ -24,6 +24,23 @@ public class RabbitTemplateContainer implements RabbitTemplate.ConfirmCallback {
     @Autowired
     private ConnectionFactory connectionFactory;
 
+    public RabbitTemplate getTemplate(Message message) throws MessageException {
+        Preconditions.checkNotNull(message);
+        String topic = message.getTopic();
+        RabbitTemplate rabbitTemplate = rabbitMap.get(topic);
+        if (rabbitTemplate != null) {
+            return rabbitTemplate;
+        }
+
+        log.info(getClassAndMethodName() + "topic: {} is not existed, create one", topic);
+
+        RabbitTemplate newRabbitTemplate = getRabbitTemplate(message, topic);
+
+        rabbitMap.put(topic, newRabbitTemplate);
+
+        return rabbitMap.get(topic);
+    }
+
     private RabbitTemplate getRabbitTemplate(Message message, String topic) {
         RabbitTemplate newRabbitTemplate = new RabbitTemplate(connectionFactory);
         newRabbitTemplate.setExchange(topic);
