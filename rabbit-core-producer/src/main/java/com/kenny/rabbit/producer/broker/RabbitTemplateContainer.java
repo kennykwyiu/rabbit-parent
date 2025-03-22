@@ -1,6 +1,7 @@
 package com.kenny.rabbit.producer.broker;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -13,6 +14,7 @@ import rabbit.api.Message;
 import rabbit.api.MessageType;
 import rabbit.api.exception.MessageException;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -20,6 +22,8 @@ import java.util.Map;
 public class RabbitTemplateContainer implements RabbitTemplate.ConfirmCallback {
 
     private Map<String /* TOPIC */, RabbitTemplate> rabbitMap = Maps.newConcurrentMap();
+
+    private Splitter splitter = Splitter.on("#");
 
     @Autowired
     private ConnectionFactory connectionFactory;
@@ -65,6 +69,15 @@ public class RabbitTemplateContainer implements RabbitTemplate.ConfirmCallback {
 
     @Override
     public void confirm(CorrelationData correlationData, boolean ack, String cause) {
+        List<String> strings = splitter.splitToList(correlationData.getId());
 
+        String messageId = strings.get(0);
+        long sendTime = Long.parseLong(strings.get(1));
+
+        if (ack) {
+            log.info("send message is OK, confirm messageId: {}, sendTime: {}", messageId, sendTime);
+        } else {
+            log.error("send message is Fail, confirm messageId: {}, sendTime: {}", messageId, sendTime);
+        }
     }
 }
