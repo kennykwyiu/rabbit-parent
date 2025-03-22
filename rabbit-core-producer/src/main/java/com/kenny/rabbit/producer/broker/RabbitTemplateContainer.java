@@ -24,6 +24,22 @@ public class RabbitTemplateContainer implements RabbitTemplate.ConfirmCallback {
     @Autowired
     private ConnectionFactory connectionFactory;
 
+    private RabbitTemplate getRabbitTemplate(Message message, String topic) {
+        RabbitTemplate newRabbitTemplate = new RabbitTemplate(connectionFactory);
+        newRabbitTemplate.setExchange(topic);
+        newRabbitTemplate.setRoutingKey(message.getRoutingKey());
+        newRabbitTemplate.setRetryTemplate(new RetryTemplate());
+
+//        newRabbitTemplate.setMessageConverter(messageConverter);
+
+        MessageType messageType = message.getMessageType();
+        MessageType rapid = MessageType.RAPID;
+        if (!rapid.equals(messageType)) {
+            newRabbitTemplate.setConfirmCallback(this);
+        }
+        return newRabbitTemplate;
+    }
+
     private String getClassAndMethodName() {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
         StackTraceElement element = stackTrace[2]; // index 2 gives the caller method
