@@ -1,6 +1,6 @@
 package rabbit.api.exception;
 
-public class MessageException extends Exception {
+public class MessageException extends RuntimeException {
     private static final long serialVersionUID = -1896774862170691027L;
 
     public MessageException() {
