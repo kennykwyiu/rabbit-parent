@@ -1,6 +1,7 @@
 package com.kenny.rabbit.common.serializer.impl;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,7 +45,12 @@ public class JacksonSerializer implements Serializer {
 
     @Override
     public byte[] serializeRaw(Object data) {
-        return new byte[0];
+        try {
+            return mapper.writeValueAsBytes(data); // Convert object to byte array
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Serialization error", e);
+        }
+        return null; // Return null if serialization fails
     }
 
     @Override
