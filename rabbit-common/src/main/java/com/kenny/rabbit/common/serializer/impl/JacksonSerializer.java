@@ -76,6 +76,11 @@ public class JacksonSerializer implements Serializer {
 
     @Override
     public <T> T deserialize(byte[] content) {
-        return null;
+        try {
+            return mapper.readValue(content, type); // Convert byte array back to object
+        } catch (IOException e) {
+            LOGGER.error("Deserialization error", e);
+        }
+        return null; // Return null if deserialization fails
     }
 }
