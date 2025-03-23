@@ -20,7 +20,7 @@ public class GenericMessageConverter implements MessageConverter {
 
     @Override
     public Message toMessage(Object object, MessageProperties messageProperties) throws MessageConversionException {
-        return null;
+        return new Message(this.serializer.serializeRaw(object), messageProperties);
     }
 
     @Override
