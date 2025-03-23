@@ -55,7 +55,12 @@ public class JacksonSerializer implements Serializer {
 
     @Override
     public String serialize(Object data) {
-        return null;
+        try {
+            return mapper.writeValueAsString(data); // Convert object to JSON string
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Serialization error", e);
+        }
+        return null; // Return null if serialization fails
     }
 
     @Override
