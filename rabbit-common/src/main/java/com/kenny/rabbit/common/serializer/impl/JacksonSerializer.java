@@ -10,6 +10,7 @@ import com.kenny.rabbit.common.serializer.Serializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 
 public class JacksonSerializer implements Serializer {
@@ -65,7 +66,12 @@ public class JacksonSerializer implements Serializer {
 
     @Override
     public <T> T deserialize(String content) {
-        return null;
+        try {
+            return mapper.readValue(content, type); // Convert JSON string back to object
+        } catch (IOException e) {
+            LOGGER.error("Deserialization error", e);
+        }
+        return null; // Return null if deserialization fails
     }
 
     @Override
