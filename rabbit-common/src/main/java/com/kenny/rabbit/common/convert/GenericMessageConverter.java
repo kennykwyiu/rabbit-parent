@@ -30,6 +30,7 @@ public class GenericMessageConverter implements MessageConverter {
 
     @Override
     public Object fromMessage(Message message) throws MessageConversionException {
-        return null;
+        byte[] body = message.getBody();
+        return this.serializer.deserialize(body);
     }
 }
