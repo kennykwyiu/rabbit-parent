@@ -9,6 +9,8 @@ import com.kenny.rabbit.common.serializer.Serializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Type;
+
 public class JacksonSerializer implements Serializer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JacksonSerializer.class);
@@ -30,6 +32,10 @@ public class JacksonSerializer implements Serializer {
 
     public JacksonSerializer(JavaType type) {
         this.type = type;
+    }
+
+    public JacksonSerializer(Type type) {
+        this.type = mapper.getTypeFactory().constructType(type);
     }
 
     @Override
