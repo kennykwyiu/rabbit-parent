@@ -38,6 +38,10 @@ public class JacksonSerializer implements Serializer {
         this.type = mapper.getTypeFactory().constructType(type);
     }
 
+    public static JacksonSerializer createParametricType(Class<?> clazz) {
+        return new JacksonSerializer(mapper.getTypeFactory().constructType(clazz));
+    }
+
     @Override
     public byte[] serializeRaw(Object data) {
         return new byte[0];
