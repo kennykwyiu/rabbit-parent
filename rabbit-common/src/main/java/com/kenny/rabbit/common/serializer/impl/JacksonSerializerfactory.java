@@ -1,7 +1,7 @@
 package com.kenny.rabbit.common.serializer.impl;
 
-import com.kenny.rabbit.common.serializer.Serializer;
-import com.kenny.rabbit.common.serializer.Serializerfactory;
+import com.kenny.rabbit.common.Serializer;
+import com.kenny.rabbit.common.Serializerfactory;
 import rabbit.api.Message;
 
 public class JacksonSerializerfactory implements Serializerfactory {

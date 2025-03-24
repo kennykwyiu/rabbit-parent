@@ -1,4 +1,4 @@
-package com.kenny.rabbit.common.serializer;
+package com.kenny.rabbit.common;
 
 public interface Serializer {
     byte[] serializeRaw(Object data);
