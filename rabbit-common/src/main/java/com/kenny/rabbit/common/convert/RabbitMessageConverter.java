@@ -1,9 +1,10 @@
 package com.kenny.rabbit.common.convert;
 
 import com.google.common.base.Preconditions;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHeaders;
-import org.springframework.messaging.converter.MessageConverter;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.support.converter.MessageConversionException;
+import org.springframework.amqp.support.converter.MessageConverter;
 
 public class RabbitMessageConverter implements MessageConverter {
     private GenericMessageConverter delegate;
@@ -13,13 +14,14 @@ public class RabbitMessageConverter implements MessageConverter {
         this.delegate = genericMessageConverter;
     }
 
+
     @Override
-    public Object fromMessage(Message<?> message, Class<?> aClass) {
+    public Message toMessage(Object object, MessageProperties messageProperties) throws MessageConversionException {
         return null;
     }
 
     @Override
-    public Message<?> toMessage(Object o, MessageHeaders messageHeaders) {
+    public Object fromMessage(Message message) throws MessageConversionException {
         return null;
     }
 }
