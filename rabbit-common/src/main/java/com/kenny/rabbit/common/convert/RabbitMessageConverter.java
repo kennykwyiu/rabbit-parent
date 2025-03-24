@@ -22,6 +22,7 @@ public class RabbitMessageConverter implements MessageConverter {
 
     @Override
     public Object fromMessage(Message message) throws MessageConversionException {
-        return null;
+        rabbit.api.Message msg = (rabbit.api.Message) this.delegate.fromMessage(message);
+        return msg;
     }
 }
