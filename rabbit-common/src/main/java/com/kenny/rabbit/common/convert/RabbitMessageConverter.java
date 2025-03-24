@@ -9,6 +9,8 @@ import org.springframework.amqp.support.converter.MessageConverter;
 public class RabbitMessageConverter implements MessageConverter {
     private GenericMessageConverter delegate;
 
+    private final String defaultExpire = String.valueOf(24 * 60 * 60 * 1000);
+
     public RabbitMessageConverter(GenericMessageConverter genericMessageConverter) {
         Preconditions.checkNotNull(genericMessageConverter);
         this.delegate = genericMessageConverter;
@@ -17,7 +19,8 @@ public class RabbitMessageConverter implements MessageConverter {
 
     @Override
     public Message toMessage(Object object, MessageProperties messageProperties) throws MessageConversionException {
-        return null;
+        messageProperties.setExpiration(defaultExpire);
+        return this.delegate.toMessage(object, messageProperties);
     }
 
     @Override
