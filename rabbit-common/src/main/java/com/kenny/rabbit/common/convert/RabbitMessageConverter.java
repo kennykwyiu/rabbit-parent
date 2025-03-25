@@ -16,7 +16,6 @@ public class RabbitMessageConverter implements MessageConverter {
         this.delegate = genericMessageConverter;
     }
 
-
     @Override
     public Message toMessage(Object object, MessageProperties messageProperties) throws MessageConversionException {
         messageProperties.setExpiration(defaultExpire);
