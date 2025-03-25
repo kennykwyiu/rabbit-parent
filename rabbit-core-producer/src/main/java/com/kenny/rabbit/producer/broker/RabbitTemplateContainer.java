@@ -3,6 +3,11 @@ package com.kenny.rabbit.producer.broker;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Maps;
+import com.kenny.rabbit.common.Serializer;
+import com.kenny.rabbit.common.Serializerfactory;
+import com.kenny.rabbit.common.convert.GenericMessageConverter;
+import com.kenny.rabbit.common.convert.RabbitMessageConverter;
+import com.kenny.rabbit.common.serializer.impl.JacksonSerializerfactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
@@ -24,6 +29,8 @@ public class RabbitTemplateContainer implements RabbitTemplate.ConfirmCallback {
     private Map<String /* TOPIC */, RabbitTemplate> rabbitMap = Maps.newConcurrentMap();
 
     private Splitter splitter = Splitter.on("#");
+
+    private Serializerfactory serializerfactory = JacksonSerializerfactory.INSTANCE;
 
     @Autowired
     private ConnectionFactory connectionFactory;
@@ -51,7 +58,10 @@ public class RabbitTemplateContainer implements RabbitTemplate.ConfirmCallback {
         newRabbitTemplate.setRoutingKey(message.getRoutingKey());
         newRabbitTemplate.setRetryTemplate(new RetryTemplate());
 
-//        newRabbitTemplate.setMessageConverter(messageConverter);
+        Serializer serializer = serializerfactory.create();
+        GenericMessageConverter gmc = new GenericMessageConverter(serializer);
+        RabbitMessageConverter rmc = new RabbitMessageConverter(gmc);
+        newRabbitTemplate.setMessageConverter(rmc);
 
         MessageType messageType = message.getMessageType();
         MessageType rapid = MessageType.RAPID;
