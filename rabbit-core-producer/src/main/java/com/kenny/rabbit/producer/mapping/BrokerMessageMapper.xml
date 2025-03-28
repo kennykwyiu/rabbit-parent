@@ -133,6 +133,11 @@
         ]]>
   </select>
 
+    <select id="queryBrokerMessageStatus" resultMap="BaseResultMap" >
+        select message_id, message, try_count, status, next_retry, create_time, update_time
+        from broker_message bm
+        where bm.status = #{brokerMessageStatus,jdbcType=VARCHAR}
+    </select>
 
 
 
