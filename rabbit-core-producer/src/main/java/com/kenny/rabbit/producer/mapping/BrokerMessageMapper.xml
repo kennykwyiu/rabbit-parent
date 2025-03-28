@@ -104,6 +104,18 @@
         </set>
         where message_id = #{messageId,jdbcType=VARCHAR}
     </update>
+    <update id="updateByPrimaryKey" parameterType="com.kenny.rabbit.producer.entity.BrokerMessage" >
+        update broker_message
+        set message = #{message,jdbcType=VARCHAR, typeHandler=com.kenny.rabbit.common.mybatis.handler.MessageJsonTypeHandler},
+            try_count = #{tryCount,jdbcType=INTEGER},
+            status = #{status,jdbcType=VARCHAR},
+            next_retry = #{nextRetry,jdbcType=TIMESTAMP},
+            create_time = #{createTime,jdbcType=TIMESTAMP},
+            update_time = #{updateTime,jdbcType=TIMESTAMP}
+        where message_id = #{messageId,jdbcType=VARCHAR}
+    </update>
+
+
 
 
 </mapper>
