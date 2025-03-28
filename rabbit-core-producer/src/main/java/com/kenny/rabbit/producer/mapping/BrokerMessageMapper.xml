@@ -116,6 +116,14 @@
     </update>
 
 
+    <update id="changeBrokerMessageStatus" >
+        update broker_message bm
+        set bm.status = #{brokerMessageStatus,jdbcType=VARCHAR},
+            bm.update_time = #{updateTime, jdbcType=TIMESTAMP}
+        where bm.message_id = #{brokerMessageId,jdbcType=VARCHAR}
+    </update>
+
+
 
 
 </mapper>
