@@ -19,5 +19,10 @@
         from broker_message
         where message_id = #{messageId,jdbcType=VARCHAR}
     </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from broker_message
+        where message_id = #{messageId,jdbcType=VARCHAR}
+    </delete>
+
 
 </mapper>
