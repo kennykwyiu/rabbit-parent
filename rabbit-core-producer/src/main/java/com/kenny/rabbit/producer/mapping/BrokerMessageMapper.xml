@@ -124,6 +124,16 @@
     </update>
 
 
+    <select id="queryBrokerMessageStatus4Timeout" resultMap="BaseResultMap" >
+  	<![CDATA[
+        select message_id, message, try_count, status, next_retry, create_time, update_time
+        from broker_message bm
+        where bm.status = #{brokerMessageStatus,jdbcType=VARCHAR}
+          and bm.next_retry < sysdate()
+        ]]>
+  </select>
+
+
 
 
 </mapper>
