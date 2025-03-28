@@ -23,6 +23,14 @@
         delete from broker_message
         where message_id = #{messageId,jdbcType=VARCHAR}
     </delete>
+    <insert id="insert" parameterType="com.kenny.rabbit.producer.entity.BrokerMessage" >
+        insert into broker_message (message_id, message, try_count,
+                                    status, next_retry, create_time,
+                                    update_time)
+        values (#{messageId,jdbcType=VARCHAR}, #{message,jdbcType=VARCHAR, typeHandler=com.kenny.rabbit.common.mybatis.handler.MessageJsonTypeHandler}, #{tryCount,jdbcType=INTEGER},
+                #{status,jdbcType=VARCHAR}, #{nextRetry,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP},
+                #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
 
 
 </mapper>
