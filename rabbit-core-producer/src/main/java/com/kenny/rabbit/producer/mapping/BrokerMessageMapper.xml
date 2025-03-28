@@ -80,5 +80,30 @@
             </if>
         </trim>
     </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.kenny.rabbit.producer.entity.BrokerMessage" >
+        update broker_message
+        <set >
+            <if test="message != null" >
+                message = #{message,jdbcType=VARCHAR, typeHandler=com.kenny.rabbit.common.mybatis.handler.MessageJsonTypeHandler},
+            </if>
+            <if test="tryCount != null" >
+                try_count = #{tryCount,jdbcType=INTEGER},
+            </if>
+            <if test="status != null" >
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="nextRetry != null" >
+                next_retry = #{nextRetry,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null" >
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null" >
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where message_id = #{messageId,jdbcType=VARCHAR}
+    </update>
+
 
 </mapper>
