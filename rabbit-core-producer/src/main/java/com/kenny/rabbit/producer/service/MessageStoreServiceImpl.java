@@ -25,4 +25,10 @@ public class MessageStoreServiceImpl implements MessageStoreService {
                                                             new Date());
     }
 
+    @Override
+    public void failure(String messageId) {
+        this.brokerMessageMapper.changeBrokerMessageStatus(messageId,
+                BrokerMessageStatus.SEND_FAIL.getCode(),
+                new Date());
+    }
 }
