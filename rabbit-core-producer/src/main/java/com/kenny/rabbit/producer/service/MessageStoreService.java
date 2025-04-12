@@ -5,4 +5,7 @@ import org.springframework.stereotype.Service;
 
 public interface MessageStoreService {
     public int insert(BrokerMessage brokerMessage);
+
+    void success(String messageId);
+
 }
