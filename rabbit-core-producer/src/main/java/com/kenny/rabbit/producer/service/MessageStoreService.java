@@ -7,5 +7,6 @@ public interface MessageStoreService {
     public int insert(BrokerMessage brokerMessage);
 
     void success(String messageId);
+    void failure(String messageId);
 
 }
