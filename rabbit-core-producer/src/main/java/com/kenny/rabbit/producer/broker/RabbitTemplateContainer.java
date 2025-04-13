@@ -89,7 +89,9 @@ public class RabbitTemplateContainer implements RabbitTemplate.ConfirmCallback {
         long sendTime = Long.parseLong(strings.get(1));
 
         if (ack) {
+            // When the Broker returns an ACK success, update the message status to SEND_OK in the log table
 
+            // If the current message type is RELIANT, we look it up in the database and update it
             this.messageStoreService.success(messageId);
 
             log.info("send message is OK, confirm messageId: {}, sendTime: {}", messageId, sendTime);
