@@ -8,6 +8,7 @@ import com.kenny.rabbit.common.Serializerfactory;
 import com.kenny.rabbit.common.convert.GenericMessageConverter;
 import com.kenny.rabbit.common.convert.RabbitMessageConverter;
 import com.kenny.rabbit.common.serializer.impl.JacksonSerializerfactory;
+import com.kenny.rabbit.producer.service.MessageStoreService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
@@ -34,6 +35,9 @@ public class RabbitTemplateContainer implements RabbitTemplate.ConfirmCallback {
 
     @Autowired
     private ConnectionFactory connectionFactory;
+
+    @Autowired
+    private MessageStoreService messageStoreService;
 
     public RabbitTemplate getTemplate(Message message) throws MessageRunTimeException {
         Preconditions.checkNotNull(message);
@@ -85,6 +89,9 @@ public class RabbitTemplateContainer implements RabbitTemplate.ConfirmCallback {
         long sendTime = Long.parseLong(strings.get(1));
 
         if (ack) {
+
+            this.messageStoreService.success(messageId);
+
             log.info("send message is OK, confirm messageId: {}, sendTime: {}", messageId, sendTime);
         } else {
             log.error("send message is Fail, confirm messageId: {}, sendTime: {}", messageId, sendTime);
