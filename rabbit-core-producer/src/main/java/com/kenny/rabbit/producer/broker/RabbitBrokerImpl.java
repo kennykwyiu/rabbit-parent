@@ -1,6 +1,11 @@
 package com.kenny.rabbit.producer.broker;
 
+import com.kenny.rabbit.producer.constant.BrokerMessageConst;
+import com.kenny.rabbit.producer.constant.BrokerMessageStatus;
+import com.kenny.rabbit.producer.entity.BrokerMessage;
+import com.kenny.rabbit.producer.service.MessageStoreService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +14,17 @@ import rabbit.api.Message;
 import rabbit.api.MessageType;
 import rabbit.api.exception.MessageRunTimeException;
 
+import java.util.Date;
+
 @Slf4j
 @Component
 public class RabbitBrokerImpl implements RabbitBroker {
 
     @Autowired
     private RabbitTemplateContainer rabbitTemplateContainer;
+
+    @Autowired
+    private MessageStoreService messageStoreService;
 
     @Override
     public void rapidSend(Message message) {
@@ -46,6 +56,18 @@ public class RabbitBrokerImpl implements RabbitBroker {
     @Override
     public void reliantSend(Message message) {
 
+        message.setMessageType(MessageType.RELIANT);
+        Date now = new Date();
+        BrokerMessage brokerMessage = new BrokerMessage();
+        brokerMessage.setMessageId(message.getMessageId());
+        brokerMessage.setStatus(BrokerMessageStatus.SENDING.getCode());
+        brokerMessage.setNextRetry(DateUtils.addMinutes(now, BrokerMessageConst.TIMEOUT));
+        brokerMessage.setCreateTime(now);
+        brokerMessage.setUpdateTime(now);
+        brokerMessage.setMessage(message);
+        messageStoreService.insert(brokerMessage);
+
+        sendKernel(message);
     }
 
     @Override
