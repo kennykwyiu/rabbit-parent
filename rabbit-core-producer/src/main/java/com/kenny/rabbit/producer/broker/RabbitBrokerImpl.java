@@ -57,16 +57,19 @@ public class RabbitBrokerImpl implements RabbitBroker {
     public void reliantSend(Message message) {
 
         message.setMessageType(MessageType.RELIANT);
+        //1. First record the message sending log in the database
         Date now = new Date();
         BrokerMessage brokerMessage = new BrokerMessage();
         brokerMessage.setMessageId(message.getMessageId());
         brokerMessage.setStatus(BrokerMessageStatus.SENDING.getCode());
+        //tryCount doesn't need to be set during the initial sending
         brokerMessage.setNextRetry(DateUtils.addMinutes(now, BrokerMessageConst.TIMEOUT));
         brokerMessage.setCreateTime(now);
         brokerMessage.setUpdateTime(now);
         brokerMessage.setMessage(message);
         messageStoreService.insert(brokerMessage);
 
+        //2. Execute the actual message sending logic
         sendKernel(message);
     }
 
